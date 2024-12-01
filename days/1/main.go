@@ -25,10 +25,10 @@ func partOne(parseResult []string) {
 	var differences = make([]int, 0)
 
 	for i := 0; i < len(firstCol); i++ {
-		differences = append(differences, calcDifferenceBetweenNumbers(firstCol[i], secondCol[i]))
+		differences = append(differences, int(math.Abs(float64(firstCol[i]-secondCol[i]))))
 	}
 
-	fmt.Printf("The total differences between the lists are %v", sumArray(differences))
+	fmt.Printf("The total differences between the lists are %v\n", sumArray(differences))
 }
 
 func partTwo(parseResult []string) {
@@ -67,16 +67,11 @@ func splitParsedFile(arr []string) ([]int, []int) {
 
 func handleStringToIntConversion(toBeConverted string) int {
 	res, err := strconv.Atoi(toBeConverted)
-
 	if err != nil {
 		panic(err)
 	}
 
 	return res
-}
-
-func calcDifferenceBetweenNumbers(num1 int, num2 int) int {
-	return int(math.Abs(float64(num1 - num2)))
 }
 
 func sumArray(numbers []int) int {

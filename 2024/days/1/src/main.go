@@ -14,10 +14,14 @@ func main() {
 	const filePath string = "./my_input_file.txt"
 
 	var parseResult []string = parseFile(filePath)
+	partOne(parseResult)
+	partTwo(parseResult)
+}
+
+func partOne(parseResult []string) {
 	var firstCol, secondCol []int = splitParsedFile(parseResult)
 	sort.Ints(firstCol)
 	sort.Ints(secondCol)
-
 	var differences = make([]int, 0)
 
 	for i := 0; i < len(firstCol); i++ {
@@ -25,6 +29,28 @@ func main() {
 	}
 
 	fmt.Printf("The total differences between the lists are %v", sumArray(differences))
+}
+
+func partTwo(parseResult []string) {
+	var firstCol, secondCol []int = splitParsedFile(parseResult)
+
+	var sum int = 0
+
+	for i := 0; i < len(firstCol); i++ {
+		sum += (countOccurences(secondCol, firstCol[i]) * firstCol[i])
+	}
+
+	fmt.Printf("The total sum is %v", sum)
+}
+
+func countOccurences(slice []int, toFind int) int {
+	count := 0
+	for _, s := range slice {
+		if s == toFind {
+			count++
+		}
+	}
+	return count
 }
 
 func splitParsedFile(arr []string) ([]int, []int) {

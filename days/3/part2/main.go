@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	const filePath string = "./my_input_file.txt"
 
 	lines, err := parseFile(filePath)
-
 	if err != nil {
-		fmt.Printf("error reading file: %v", err)
+		fmt.Printf("error reading file: %v \n", err)
 		panic(err)
 	}
 
@@ -30,7 +30,9 @@ func main() {
 		}
 	}
 
-	fmt.Printf("The total sum is %v", res)
+	fmt.Printf("The total sum is %v \n", res)
+	elapsed := time.Since(start)
+	fmt.Printf("The program took %s to execute", elapsed)
 }
 
 func getValidMatches(input string) []string {
@@ -51,43 +53,33 @@ func splitTextIntoDoBlocks(input string) []string {
 }
 
 func addUpNumbers(input string) int {
-	splittedNumbers := strings.Split(input, ",")
+	var num1 int
+	var num2 int
 
-	reg, err := regexp.Compile("[^0-9]+")
+	_, err := fmt.Sscanf(input, "mul(%d,%d)", &num1, &num2)
 
 	if err != nil {
 		panic(err)
 	}
 
-	var numbers []int
-
-	for i := range splittedNumbers {
-		convertedInt, err := strconv.Atoi(reg.ReplaceAllString(splittedNumbers[i], ""))
-
-		if err != nil {
-			panic(err)
-		}
-
-		numbers = append(numbers, convertedInt)
-	}
-
-	return numbers[0] * numbers[1]
+	return num1 * num2
 }
 
 func parseFile(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Print(err)
-		return "", err
-	} else {
-		scanner := bufio.NewScanner(file)
-
-		var content string
-
-		for scanner.Scan() {
-			content += scanner.Text()
-		}
-
-		return content, nil
+		panic(err)
 	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var builder strings.Builder
+	for scanner.Scan() {
+		builder.WriteString(scanner.Text())
+	}
+	content := builder.String()
+
+	return content, nil
 }
